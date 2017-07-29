@@ -15,10 +15,7 @@
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${doc.dir}"/>
     </target>
-    <!-- Compile the java code in src dir into build dir -->
-    <target name="compile" depends="init" description="compile java sources">
-        <javac srcdir="${source.dir}" destdir="${build.dir}"/>
-    </target>
+    
     <!-- Generate javadocs for current project into docs dir -->
     <target name="doc" depends="init" description="generate documentation">
         <javadoc sourcepath="${source.dir}" destdir="${doc.dir}"/>
@@ -35,8 +32,26 @@
     </target>
     
     <target name="package" depends="compile" description="generate JAR">
-        <javadoc sourcepath="${source.dir}" destdir="${doc.dir}"/>
+        
         <jar destfile="${build.dir}/integracaocontinua.jar" basedir="${build.dir}"/>
     </target>  
     
+    <target name="main" depends="package">
+        <description>Ordens das Dependências</description>
+    </target>
+    
+    <!-- Carregar no classpath as libs do junit 4 -->
+    <path id="junit.class.path">
+        <pathelement location="lib/junit-4.12.jar" />
+        <pathelement location="lib/hamcrest-core-1.3.jar" />
+        <pathelement location="${build.dir}" />   
+    </path>
+   
+    <!-- Compiles the java code including the usage of the library jUnit -->
+    <target name="compile" depends="init" description="compile java sources">
+        <javac srcdir="${source.dir}" destdir="${build.dir}" includeantruntime="false">
+            <classpath refid="junit.class.path" />
+        </javac>
+    </target>      
+        
 </project>
